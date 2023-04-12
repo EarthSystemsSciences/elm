@@ -1,0 +1,56 @@
+.custom-widget {
+    background-color: lightseagreen;
+    padding: 0px 2px;
+}
+.widget-glabel {
+    width: 145px;
+    height: 40px;
+    border: none;
+    margin: 0px 10px 10px 0;
+    color: green;
+}
+.widget-blabel {
+    width: 80px;
+    height: 40px;
+    border: none;
+    margin: 0px 5px 10px 0;
+    color: blue;
+}
+
+.widget-number {
+    background-color: #eee;
+    width: 100px;
+    height: 40px;
+    margin: 0px 10px 10px 0;
+    border: 1px solid blue;
+}
+
+.widget-input {
+    background-color: #eee;
+    width: 400px;
+    height: 40px;
+    margin: 0px 10px 10px 0;
+    border: 1px solid blue;
+}
+
+.widget-textarea {
+    overflow: hidden;
+    width: 470px;
+    height: 120px;
+    margin: 0px 10px 10px 0;
+    border: 1px solid blue;
+}
+
+.widget-button {
+    background-color: #4CAF50;
+    width: 120px;
+    height: 35px;
+    border: 1px solid blue;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+}
