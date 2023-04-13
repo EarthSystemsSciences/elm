@@ -225,7 +225,7 @@ export class ELMView extends DOMWidgetView {
     this._statuslbl = document.createElement('input');
     this._statuslbl.type = 'label';
     this._statuslbl.value = 'Run Status: ';
-    this._statuslbl.disabled = false;
+    this._statuslbl.disabled = true;
     this._statuslbl.classList.add('widget-blabel');
     this._div5.appendChild(this._statuslbl);
 
