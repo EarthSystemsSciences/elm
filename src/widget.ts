@@ -32,7 +32,7 @@ export class ELMModel extends DOMWidgetModel {
       _model_module_version: ELMModel.model_module_version,
       _view_module_version: ELMModel.view_module_version,
         
-      site_code: 'AK-BEOG',
+      site_code: 'BR-Sa1',
     };
   }
 
@@ -69,9 +69,9 @@ export class ELMView extends DOMWidgetView {
   private _adspinupyears: HTMLInputElement;
   private _finalspinupyearslbl: HTMLInputElement;
   private _finalspinupyears: HTMLInputElement;
-  private _mds_filelbl: HTMLInputElement;
+  //private _mds_filelbl: HTMLInputElement;
+  //private _mds_filepath: HTMLInputElement;
   private _clm_filelbl: HTMLInputElement;
-  private _mds_filepath: HTMLInputElement;
   private _clm_filepath: HTMLInputElement;
 
   private _submitjobbtn: HTMLInputElement;
@@ -82,9 +82,9 @@ export class ELMView extends DOMWidgetView {
   private _statuslbl: HTMLInputElement;
   private job_info: any;
 
-
   render() {
-    let options: string[] = ['AK-BEOG', 'AK-CLG', 'AK-K64G', 'AK-TLG'];
+    let options: string[] = ['BR-Sa1', 'CA-Man', 'US-Bo1', 'US-Me2', 'US-MOz', 'US-SPR', 'US-UMB']
+    // ['AK-BEOG', 'AK-CLG', 'AK-K64G', 'AK-TLG'];
     this._div0 = document.createElement('div');
     this._div0.classList.add('widget-container', 'widget-box');
     this._div1 = document.createElement('div');
@@ -119,33 +119,19 @@ export class ELMView extends DOMWidgetView {
     this._sitecode.classList.add('widget-input');
     this._div0.appendChild(this._sitecode);
 
-    this._timesteplbl = document.createElement('input');
-    this._timesteplbl.type = 'label';
-    this._timesteplbl.value = 'timestep: ';
-    this._timesteplbl.disabled = true;
-    this._timesteplbl.classList.add('widget-glabel');
-    this._div1.appendChild(this._timesteplbl);
-      
-    this._timestep = document.createElement('input');
-    this._timestep.type = 'text';
-    this._timestep.value = '-1';
-    this._timestep.disabled = false;
-    this._timestep.classList.add('widget-number');
-    this._div1.appendChild(this._timestep);
- 
     this._adspinupyearslbl = document.createElement('input');
     this._adspinupyearslbl.type = 'label';
     this._adspinupyearslbl.value = 'ad_spinup_years: ';
     this._adspinupyearslbl.disabled = true;
     this._adspinupyearslbl.classList.add('widget-glabel');
-    this._div2.appendChild(this._adspinupyearslbl);
+    this._div1.appendChild(this._adspinupyearslbl);
 
     this._adspinupyears = document.createElement('input');
     this._adspinupyears.type = 'text';
-    this._adspinupyears.value = '200';
+    this._adspinupyears.value = '50';
     this._adspinupyears.disabled = false;
     this._adspinupyears.classList.add('widget-number');
-    this._div2.appendChild(this._adspinupyears);
+    this._div1.appendChild(this._adspinupyears);
 
     this._finalspinupyearslbl = document.createElement('input');
     this._finalspinupyearslbl.type = 'label';
@@ -156,24 +142,38 @@ export class ELMView extends DOMWidgetView {
 
     this._finalspinupyears = document.createElement('input');
     this._finalspinupyears.type = 'text';
-    this._finalspinupyears.value = '600';
+    this._finalspinupyears.value = '50';
     this._finalspinupyears.disabled = false;
     this._finalspinupyears.classList.add('widget-number');
     this._div2.appendChild(this._finalspinupyears);
 
-    this._mds_filelbl = document.createElement('input');
+    this._timesteplbl = document.createElement('input');
+    this._timesteplbl.type = 'label';
+    this._timesteplbl.value = 'transient year(s): ';
+    this._timesteplbl.disabled = true;
+    this._timesteplbl.classList.add('widget-glabel');
+    this._div3.appendChild(this._timesteplbl);
+
+    this._timestep = document.createElement('input');
+    this._timestep.type = 'text';
+    this._timestep.value = '20';
+    this._timestep.disabled = false;
+    this._timestep.classList.add('widget-number');
+    this._div3.appendChild(this._timestep);
+
+    /*this._mds_filelbl = document.createElement('input');
     this._mds_filelbl.type = 'label';
     this._mds_filelbl.value = 'global_coordinates_x_y: ';
     this._mds_filelbl.disabled = true;
     this._mds_filelbl.classList.add('widget-glabel');
-    this._div3.appendChild(this._mds_filelbl);
+    this._div4.appendChild(this._mds_filelbl);
 
     this._mds_filepath = document.createElement('input');
     this._mds_filepath.type = 'text';
     this._mds_filepath.value = 'global_coordinates_x_y';
     this._mds_filepath.disabled = false;
     this._mds_filepath.classList.add('widget-input');
-    this._div3.appendChild(this._mds_filepath);
+    this._div4.appendChild(this._mds_filepath);*/
 
     this._clm_filelbl = document.createElement('input');
     this._clm_filelbl.type = 'label';
@@ -194,7 +194,7 @@ export class ELMView extends DOMWidgetView {
     this.model.on('change:time_step', this._onTimestepChanged, this);
     this.model.on('change:ad_spinup_years', this._onADSpinupyearsChanged, this);
     this.model.on('change:final_spinup_years', this._onFinalSpinupyearsChanged, this);
-    this.model.on('change:mds_filepath', this._onMDSFilepathChanged, this);
+    //this.model.on('change:mds_filepath', this._onMDSFilepathChanged, this);
     this.model.on('change:clm_filepath', this._onCLMFilepathChanged, this);
     this.model.on('change:status', this._onStatusChanged, this);
       
@@ -203,7 +203,7 @@ export class ELMView extends DOMWidgetView {
     this._timestep.onchange = this._onTSInputChanged.bind(this);
     this._adspinupyears.onchange = this._onADSInputChanged.bind(this);
     this._finalspinupyears.onchange = this._onFSInputChanged.bind(this);
-    this._mds_filepath.onchange = this._onMFInputChanged.bind(this);
+    //this._mds_filepath.onchange = this._onMFInputChanged.bind(this);
     this._clm_filepath.onchange = this._onCFInputChanged.bind(this);
 
     this._submitjobbtn = document.createElement('input');
@@ -285,7 +285,7 @@ export class ELMView extends DOMWidgetView {
 
   // get (Python -> JavaScript update)
   private _onSitecodeChanged() {
-    let options: string[] = ['AK-BEOG', 'AK-CLG', 'AK-K64G', 'AK-TLG'];
+    let options: string[] = ['BR-Sa1', 'CA-Man', 'US-Bo1', 'US-Me2', 'US-MOz', 'US-SPR', 'US-UMB'];
     this._sitecode.value = this.model.get('site_code');
     const idx = options.indexOf(this._sitecode.value).toString();
     this._sitecode.setAttribute('selectedIndex', idx);
@@ -299,9 +299,9 @@ export class ELMView extends DOMWidgetView {
   private _onFinalSpinupyearsChanged() {
     this._finalspinupyears.value = this.model.get('final_spinup_years');
   }
-  private _onMDSFilepathChanged() {
-    this._mds_filepath.value = this.model.get('mds_filepath');
-  }
+  /*private _onMDSFilepathChanged() {
+    this._mds_filepath.value = this.model.get('mdsf_filepath');
+  }*/
   private _onCLMFilepathChanged() {
     this._clm_filepath.value = this.model.get('clm_filepath');
   }    
@@ -335,11 +335,11 @@ export class ELMView extends DOMWidgetView {
     this.model.set('final_spinup_years', this._finalspinupyears.value);
     this.model.save_changes();
   }
-  private _onMFInputChanged() {
+  /*private _onMFInputChanged() {
     // get the values updated from the front-end to the Python kernel
-    this.model.set('mds_filepath', this._mds_filepath.value);
+    this.model.set('mdsf_filepath', this._mds_filepath.value);
     this.model.save_changes();
-  }
+  }*/
   private _onCFInputChanged() {
     // get the values updated from the front-end to the Python kernel
     this.model.set('clm_filepath', this._clm_filepath.value);
@@ -373,9 +373,16 @@ export class ELMView extends DOMWidgetView {
     const xhr = new XMLHttpRequest();
     const method = "GET";
       
-    //alert('GET url: ' + url);
+    alert('GET url: ' + url);
 
     xhr.open(method, url, true);
+
+    xhr.setRequestHeader("Accept", "application/json")
+    xhr.setRequestHeader("Content-Type", "application/json");
+    // xhr.setRequestHeader("Authorization", "Bearer " + this.model.get('usertoken'));
+    xhr.setRequestHeader("Authorization", "Bearer");
+    xhr.setRequestHeader(this.model.get('username'), this.model.get('usertoken'));
+
     xhr.onreadystatechange = () => {
       if (xhr.readyState === XMLHttpRequest.DONE) {
         const status = xhr.status;
@@ -401,13 +408,16 @@ export class ELMView extends DOMWidgetView {
   private build_query(data: any, method: string) {
       let query = '';
       if (method == 'runNGEEArctic') {
-          const ts: number = +data.timestep as number;
+          const ts: number = +data.transientYs as number;
           const a_years: number = +data.ad_spinup_years as number;
           const f_years: number = +data.final_spinup_years as number;
+          const clm_file: string = data.clm_parameters_file;
           query = query + '?site_code=' + data.site_code;
-          query = query + '&timestep=' + ts;
+          query = query + '&transient_years=' + ts;
           query = query + '&ad_spinup_years=' + a_years;
           query = query + '&final_spinup_years=' + f_years;
+          query = query + '&clm_parameters_file=' + clm_file;
+          query = query + '&username=' + this.model.get('username');
       } else if (method == 'subXY') {
           query = query + '?x=' + data.x;
           query = query + '&y=' + data.y;
@@ -422,19 +432,19 @@ export class ELMView extends DOMWidgetView {
     const base_url: string = 'http://sequoia.mcs.anl.gov:30002/run_NGEEArctic_point_based_sim';
 
     const sitecode: string = this._sitecode.value;
-    const timestep: number = +this._timestep.value as number;
+    const transientYs: number = +this._timestep.value as number;
     const adspinup_years: number = +this._adspinupyears.value as number;
     const finalspinup_years: number = +this._finalspinupyears.value as number;
     const clm_file: string = this._clm_filepath.value;
-    const mds_file: string = this._mds_filepath.value;
+    //const mds_file: string = this._mds_filepath.value;
 
-    if (sitecode && timestep && adspinup_years && finalspinup_years && clm_file && mds_file) {
+    if (sitecode && transientYs && adspinup_years && finalspinup_years && clm_file) {
         let data = {
             site_code: sitecode,
-            timestep: timestep,
+            transientYs: transientYs,
             ad_spinup_years: adspinup_years,
             final_spinup_years: finalspinup_years,
-            global_coordinates_x_y: mds_file,
+            //global_coordinates_x_y: mds_file,
             clm_parameters_file: clm_file,
         };
 

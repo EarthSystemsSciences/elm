@@ -16,6 +16,8 @@ When you call the widget in the notebook, the python module will call the javasc
 import io
 import json
 import ipywidgets as widgets
+import getpass
+import os
 from IPython.display import display
 
 from ipywidgets import DOMWidget, ValueWidget, register
@@ -39,14 +41,28 @@ class ELMWidget(DOMWidget):
 
     # widget model attributes
     site_code = Unicode('Sitecode').tag(sync=True)
-    time_step = Unicode('Timestep').tag(sync=True)
+    time_step = Unicode('Transient year(s)').tag(sync=True)
     ad_spinup_years = Unicode('ad spinup years').tag(sync=True)
     final_spinup_years = Unicode('final spinup years').tag(sync=True)
-    mdsf_filepath = Unicode('MDSF file').tag(sync=True)
+    # mdsf_filepath = Unicode('MDSF file').tag(sync=True)
     clm_filepath = Unicode('CLM parameter file').tag(sync=True)
     
     payload = Dict().tag(sync=True)
     status = Unicode('Starting').tag(sync=True)
+
+    env_data = os.environ
+    if env_data.get('JUPYTERHUB_CLIENT_ID', None):
+        client_id = Unicode(env_data['JUPYTERHUB_CLIENT_ID']).tag(sync=True)
+    else:
+        client_id = Unicode('jupyterhub-user-user1').tag(sync=True)
+    if env_data.get('JUPYTERHUB_USER', None):
+        username = Unicode(env_data['JUPYTERHUB_USER']).tag(sync=True)
+    else:
+        username = Unicode('user1').tag(sync=True)
+    if env_data.get('JUPYTERHUB_API_TOKEN', None):
+        usertoken = Unicode(env_data['JUPYTERHUB_API_TOKEN']).tag(sync=True)
+    else:
+        usertoken = Unicode('060c9785630d4ef0909215f1239f2ef8').tag(sync=True)
 
     def send_data(self, payload):
         self.send({'data': json.dumps(payload)})

@@ -6,7 +6,7 @@ Developer install
 To install a developer version of elm, you will first need to clone
 the repository::
 
-    git clone https://github.com/kbaseapps/elm
+    git clone https://github.com/kbaseapps/EarthSystemsSciences/elm.git
     cd elm
 
 Next, install it with a develop install using pip::
