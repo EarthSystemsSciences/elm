@@ -63,8 +63,8 @@ export class ELMView extends DOMWidgetView {
   private _div6: HTMLDivElement;
   private _sitecodelbl: HTMLInputElement;
   private _sitecode: HTMLSelectElement;
-  private _timesteplbl: HTMLInputElement;
-  private _timestep: HTMLInputElement;
+  private _transientYslbl: HTMLInputElement;
+  private _transientYs: HTMLInputElement;
   private _adspinupyearslbl: HTMLInputElement;
   private _adspinupyears: HTMLInputElement;
   private _finalspinupyearslbl: HTMLInputElement;
@@ -116,7 +116,7 @@ export class ELMView extends DOMWidgetView {
     });
     this._sitecode.selectedIndex = 0;
     this._sitecode.disabled = false;
-    this._sitecode.classList.add('widget-input');
+    this._sitecode.classList.add('widget-dropdown');
     this._div0.appendChild(this._sitecode);
 
     this._adspinupyearslbl = document.createElement('input');
@@ -147,19 +147,19 @@ export class ELMView extends DOMWidgetView {
     this._finalspinupyears.classList.add('widget-number');
     this._div2.appendChild(this._finalspinupyears);
 
-    this._timesteplbl = document.createElement('input');
-    this._timesteplbl.type = 'label';
-    this._timesteplbl.value = 'transient year(s): ';
-    this._timesteplbl.disabled = true;
-    this._timesteplbl.classList.add('widget-glabel');
-    this._div3.appendChild(this._timesteplbl);
+    this._transientYslbl = document.createElement('input');
+    this._transientYslbl.type = 'label';
+    this._transientYslbl.value = 'transient year(s): ';
+    this._transientYslbl.disabled = true;
+    this._transientYslbl.classList.add('widget-glabel');
+    this._div3.appendChild(this._transientYslbl);
 
-    this._timestep = document.createElement('input');
-    this._timestep.type = 'text';
-    this._timestep.value = '20';
-    this._timestep.disabled = false;
-    this._timestep.classList.add('widget-number');
-    this._div3.appendChild(this._timestep);
+    this._transientYs = document.createElement('input');
+    this._transientYs.type = 'text';
+    this._transientYs.value = '20';
+    this._transientYs.disabled = false;
+    this._transientYs.classList.add('widget-number');
+    this._div3.appendChild(this._transientYs);
 
     /*this._mds_filelbl = document.createElement('input');
     this._mds_filelbl.type = 'label';
@@ -191,7 +191,7 @@ export class ELMView extends DOMWidgetView {
 
     // Python -> JavaScript update
     this.model.on('change:site_code', this._onSitecodeChanged, this);
-    this.model.on('change:time_step', this._onTimestepChanged, this);
+    this.model.on('change:transient_years', this._onTransientYsChanged, this);
     this.model.on('change:ad_spinup_years', this._onADSpinupyearsChanged, this);
     this.model.on('change:final_spinup_years', this._onFinalSpinupyearsChanged, this);
     //this.model.on('change:mds_filepath', this._onMDSFilepathChanged, this);
@@ -200,7 +200,7 @@ export class ELMView extends DOMWidgetView {
       
     // JavaScript -> Python update
     this._sitecode.onchange = this._onSCInputChanged.bind(this);
-    this._timestep.onchange = this._onTSInputChanged.bind(this);
+    this._transientYs.onchange = this._onTSInputChanged.bind(this);
     this._adspinupyears.onchange = this._onADSInputChanged.bind(this);
     this._finalspinupyears.onchange = this._onFSInputChanged.bind(this);
     //this._mds_filepath.onchange = this._onMFInputChanged.bind(this);
@@ -226,14 +226,14 @@ export class ELMView extends DOMWidgetView {
     this._statuslbl.type = 'label';
     this._statuslbl.value = 'Run Status: ';
     this._statuslbl.disabled = true;
-    this._statuslbl.classList.add('widget-blabel');
+    this._statuslbl.classList.add('widget-glabel');
     this._div5.appendChild(this._statuslbl);
 
     this._status = document.createElement('textarea');
     this._status.value = '';
     this._status.disabled = true;
-    this._status.setAttribute('rows', '10');
-    this._status.setAttribute('cols', '180');
+    this._status.setAttribute('rows', '5');
+    this._status.setAttribute('cols', '330');
     this._status.setAttribute('wrap', 'hard');
     this._status.classList.add('widget-textarea');
     this._div5.appendChild(this._status);
@@ -290,8 +290,8 @@ export class ELMView extends DOMWidgetView {
     const idx = options.indexOf(this._sitecode.value).toString();
     this._sitecode.setAttribute('selectedIndex', idx);
   }
-  private _onTimestepChanged() {
-    this._timestep.value = this.model.get('time_step');
+  private _onTransientYsChanged() {
+    this._transientYs.value = this.model.get('transient_years');
   }
   private _onADSpinupyearsChanged() {
     this._adspinupyears.value = this.model.get('ad_spinup_years');
@@ -322,7 +322,7 @@ export class ELMView extends DOMWidgetView {
   } 
   private _onTSInputChanged() {
     // get the values updated from the front-end to the Python kernel
-    this.model.set('time_step', this._timestep.value);
+    this.model.set('transient_years', this._transientYs.value);
     this.model.save_changes();
   } 
   private _onADSInputChanged() {
@@ -373,21 +373,20 @@ export class ELMView extends DOMWidgetView {
     const xhr = new XMLHttpRequest();
     const method = "GET";
       
-    alert('GET url: ' + url);
+    //alert('GET url: ' + url);
 
     xhr.open(method, url, true);
 
     xhr.setRequestHeader("Accept", "application/json")
     xhr.setRequestHeader("Content-Type", "application/json");
-    // xhr.setRequestHeader("Authorization", "Bearer " + this.model.get('usertoken'));
-    xhr.setRequestHeader("Authorization", "Bearer");
-    xhr.setRequestHeader(this.model.get('username'), this.model.get('usertoken'));
+    xhr.setRequestHeader("Authorization", "Bearer " + this.model.get('username') + ":" + this.model.get('usertoken'));
 
     xhr.onreadystatechange = () => {
       if (xhr.readyState === XMLHttpRequest.DONE) {
         const status = xhr.status;
         //alert('Response status: ' + status);
-        if (status === 0 || (status >= 200 && status < 400)) {
+        //if (status === 0 || (status >= 200 && status < 400)) {
+        if (status == 200) {
           // The request has been completed successfully
           this.job_info = xhr.responseText;
           this._status.value = this.job_info;
@@ -429,10 +428,11 @@ export class ELMView extends DOMWidgetView {
 
   // Want to use async/await, add the `async` keyword to your outer function/method.
   private async _send_runNGEEArctic_job() {
-    const base_url: string = 'http://sequoia.mcs.anl.gov:30002/run_NGEEArctic_point_based_sim';
+    //const base_url: string = 'http://sequoia.mcs.anl.gov:30002/run_Ameriflux_point_based_sim';
+    const base_url: string = 'https://ess.cels.anl.gov/jobs_api/run_Ameriflux_point_based_sim';
 
     const sitecode: string = this._sitecode.value;
-    const transientYs: number = +this._timestep.value as number;
+    const transientYs: number = +this._transientYs.value as number;
     const adspinup_years: number = +this._adspinupyears.value as number;
     const finalspinup_years: number = +this._finalspinupyears.value as number;
     const clm_file: string = this._clm_filepath.value;
@@ -461,7 +461,7 @@ export class ELMView extends DOMWidgetView {
 
 
   private async _get_jobstatus(jobid: string) {
-    const url: string = 'http://sequoia.mcs.anl.gov:30002/jobs/';
+    const url: string = 'https://ess.cels.anl.gov/jobs_api/jobs/';
     //alert(url + jobid);
     this._submit_job(url + jobid, 'query_job');
   }

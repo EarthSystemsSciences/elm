@@ -41,7 +41,7 @@ class ELMWidget(DOMWidget):
 
     # widget model attributes
     site_code = Unicode('Sitecode').tag(sync=True)
-    time_step = Unicode('Transient year(s)').tag(sync=True)
+    transient_years = Unicode('Transient year(s)').tag(sync=True)
     ad_spinup_years = Unicode('ad spinup years').tag(sync=True)
     final_spinup_years = Unicode('final spinup years').tag(sync=True)
     # mdsf_filepath = Unicode('MDSF file').tag(sync=True)

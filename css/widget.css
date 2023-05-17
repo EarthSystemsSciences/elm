@@ -25,6 +25,14 @@
     border: 1px solid blue;
 }
 
+.widget-dropdown {
+    background-color: #eee;
+    width: 100px;
+    height: 40px;
+    margin: 0px 10px 10px 0;
+    border: 1px solid blue;
+}
+
 .widget-input {
     background-color: #eee;
     width: 400px;
@@ -36,7 +44,7 @@
 .widget-textarea {
     overflow: hidden;
     width: 500px;
-    height: 120px;
+    height: 60px;
     margin: 0px 10px 10px 0;
     border: 1px solid blue;
 }
