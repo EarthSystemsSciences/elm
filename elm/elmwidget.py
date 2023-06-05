@@ -40,12 +40,13 @@ class ELMWidget(DOMWidget):
     _view_module_version = Unicode(module_version).tag(sync=True)
 
     # widget model attributes
-    site_code = Unicode('Sitecode').tag(sync=True)
+    site_code = Unicode('BR-Sa1').tag(sync=True)
     transient_years = Unicode('Transient year(s)').tag(sync=True)
     ad_spinup_years = Unicode('ad spinup years').tag(sync=True)
     final_spinup_years = Unicode('final spinup years').tag(sync=True)
     # mdsf_filepath = Unicode('MDSF file').tag(sync=True)
     clm_filepath = Unicode('CLM parameter file').tag(sync=True)
+    job_id = Unicode('job_id').tag(sync=True)
     
     payload = Dict().tag(sync=True)
     status = Unicode('Starting').tag(sync=True)

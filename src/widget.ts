@@ -31,8 +31,7 @@ export class ELMModel extends DOMWidgetModel {
 
       _model_module_version: ELMModel.model_module_version,
       _view_module_version: ELMModel.view_module_version,
-        
-      site_code: 'BR-Sa1',
+
     };
   }
 
@@ -84,7 +83,6 @@ export class ELMView extends DOMWidgetView {
 
   render() {
     let options: string[] = ['BR-Sa1', 'CA-Man', 'US-Bo1', 'US-Me2', 'US-MOz', 'US-SPR', 'US-UMB']
-    // ['AK-BEOG', 'AK-CLG', 'AK-K64G', 'AK-TLG'];
     this._div0 = document.createElement('div');
     this._div0.classList.add('widget-container', 'widget-box');
     this._div1 = document.createElement('div');
@@ -194,6 +192,7 @@ export class ELMView extends DOMWidgetView {
     this.model.on('change:transient_years', this._onTransientYsChanged, this);
     this.model.on('change:ad_spinup_years', this._onADSpinupyearsChanged, this);
     this.model.on('change:final_spinup_years', this._onFinalSpinupyearsChanged, this);
+    this.model.on('change:job_id', this._onJobIDChanged, this);
     //this.model.on('change:mds_filepath', this._onMDSFilepathChanged, this);
     this.model.on('change:clm_filepath', this._onCLMFilepathChanged, this);
     this.model.on('change:status', this._onStatusChanged, this);
@@ -290,6 +289,9 @@ export class ELMView extends DOMWidgetView {
     const idx = options.indexOf(this._sitecode.value).toString();
     this._sitecode.setAttribute('selectedIndex', idx);
   }
+  private _onJobIDChanged() {
+    this._jobid.value = this.model.get('job_id');
+  }
   private _onTransientYsChanged() {
     this._transientYs.value = this.model.get('transient_years');
   }
@@ -319,7 +321,7 @@ export class ELMView extends DOMWidgetView {
     this._sitecode.value = this._sitecode.options[this._sitecode.selectedIndex].value;
     this.model.set('site_code', this._sitecode.value);
     this.model.save_changes();
-  } 
+  }
   private _onTSInputChanged() {
     // get the values updated from the front-end to the Python kernel
     this.model.set('transient_years', this._transientYs.value);
@@ -349,11 +351,9 @@ export class ELMView extends DOMWidgetView {
   private _onsubmitbuttonClicked() {
     return (_event: Event): void => {
         this._status.value = '';
-        this._jobid.value = '';
-        this._send_runNGEEArctic_job();
+        this._send_run_job();
     };
   }
-
 
   private _onquerybuttonClicked() {
     return (_event: Event): void => {
@@ -365,15 +365,13 @@ export class ELMView extends DOMWidgetView {
         */
         let job_id: string = this._jobid.value; //'6435db81244675d24dd2fc77';
         //alert("Getting job status for job: " + job_id);
-            this._get_jobstatus(job_id);
+        this._get_jobstatus(job_id);
     };
   }
 
   private _submit_job(url: string, task: string) {
     const xhr = new XMLHttpRequest();
     const method = "GET";
-      
-    //alert('GET url: ' + url);
 
     xhr.open(method, url, true);
 
@@ -391,10 +389,13 @@ export class ELMView extends DOMWidgetView {
           this.job_info = xhr.responseText;
           this._status.value = this.job_info;
           //alert('xhr.responseText: ' + this.job_info);
+          this.model.set('status', this._status.value);
           if (task == 'submit_job') {
               // Because xhr.responseText is a string, we need to convert it to a json object
               this._jobid.value = JSON.parse(this.job_info).job_id;
+              this.model.set('job_id', this._jobid.value);
           }
+          this.model.save_changes();
         } else {
           // Oh no! There has been an error with the request!
           
@@ -406,7 +407,7 @@ export class ELMView extends DOMWidgetView {
  
   private build_query(data: any, method: string) {
       let query = '';
-      if (method == 'runNGEEArctic') {
+      if (method == 'run') {
           const ts: number = +data.transientYs as number;
           const a_years: number = +data.ad_spinup_years as number;
           const f_years: number = +data.final_spinup_years as number;
@@ -427,7 +428,7 @@ export class ELMView extends DOMWidgetView {
 
 
   // Want to use async/await, add the `async` keyword to your outer function/method.
-  private async _send_runNGEEArctic_job() {
+  private async _send_run_job() {
     //const base_url: string = 'http://sequoia.mcs.anl.gov:30002/run_Ameriflux_point_based_sim';
     const base_url: string = 'https://ess.cels.anl.gov/jobs_api/run_Ameriflux_point_based_sim';
 
@@ -448,8 +449,7 @@ export class ELMView extends DOMWidgetView {
             clm_parameters_file: clm_file,
         };
 
-        // alert(JSON.stringify(data,  null, 4));
-        const query_str = this.build_query(data, 'runNGEEArctic');
+        const query_str = this.build_query(data, 'run');
         await this._submit_job(base_url + query_str, 'submit_job');
     }
     else {
@@ -459,10 +459,8 @@ export class ELMView extends DOMWidgetView {
     }
   }
 
-
   private async _get_jobstatus(jobid: string) {
     const url: string = 'https://ess.cels.anl.gov/jobs_api/jobs/';
-    //alert(url + jobid);
     this._submit_job(url + jobid, 'query_job');
   }
 
